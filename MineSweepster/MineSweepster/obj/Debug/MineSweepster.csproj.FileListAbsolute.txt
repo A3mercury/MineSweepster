@@ -1,0 +1,13 @@
+C:\Users\Mercury\Desktop\Minesweepster\MineSweepster\MineSweepster\bin\Debug\MineSweepster.exe.config
+C:\Users\Mercury\Desktop\Minesweepster\MineSweepster\MineSweepster\bin\Debug\MineSweepster.exe
+C:\Users\Mercury\Desktop\Minesweepster\MineSweepster\MineSweepster\bin\Debug\MineSweepster.pdb
+C:\Users\Mercury\Desktop\Minesweepster\MineSweepster\MineSweepster\obj\Debug\MineSweepster.csprojResolveAssemblyReference.cache
+C:\Users\Mercury\Desktop\Minesweepster\MineSweepster\MineSweepster\obj\Debug\MainWindow.baml
+C:\Users\Mercury\Desktop\Minesweepster\MineSweepster\MineSweepster\obj\Debug\MainWindow.g.cs
+C:\Users\Mercury\Desktop\Minesweepster\MineSweepster\MineSweepster\obj\Debug\App.g.cs
+C:\Users\Mercury\Desktop\Minesweepster\MineSweepster\MineSweepster\obj\Debug\MineSweepster_MarkupCompile.cache
+C:\Users\Mercury\Desktop\Minesweepster\MineSweepster\MineSweepster\obj\Debug\MineSweepster.g.resources
+C:\Users\Mercury\Desktop\Minesweepster\MineSweepster\MineSweepster\obj\Debug\MineSweepster.Properties.Resources.resources
+C:\Users\Mercury\Desktop\Minesweepster\MineSweepster\MineSweepster\obj\Debug\MineSweepster.csproj.GenerateResource.Cache
+C:\Users\Mercury\Desktop\Minesweepster\MineSweepster\MineSweepster\obj\Debug\MineSweepster.exe
+C:\Users\Mercury\Desktop\Minesweepster\MineSweepster\MineSweepster\obj\Debug\MineSweepster.pdb
