@@ -23,8 +23,8 @@ namespace MineSweepster
         // Constants
         private const int BOMB = 9;
 
-        private int numberOfCells = 9;
-        private int numberOfBombs = 10;
+        private int numberOfCells = 16;
+        private int numberOfBombs = 40;
         
         private bool[,] isBomb;
         private int[,] Cells;
@@ -32,7 +32,9 @@ namespace MineSweepster
         private Random rand;
         private int randX, randY;
 
-        int rectSize;
+        private int rectSize;
+
+        private bool isGameInSession = false;
 
         private bool isFlag = false;
         private bool isUnsure = false;
@@ -43,13 +45,17 @@ namespace MineSweepster
 
             rand = new Random();
 
+            mainWindow.Height = mainWindow.Width;
+
+            boardCanvas.Width = mainWindow.Width;
+            boardCanvas.Height = boardCanvas.Width;
+
             rectSize = (int)boardCanvas.Width / numberOfCells;
 
             CreateBoard();
-            GetBombPlacement();
-            SetAdjacentToBombValues();
+            //GetBombPlacement();
             ConsoleDrawGrid();
-            //DrawGrid();
+            DrawGrid();
         }
 
         /// <summary>
@@ -97,22 +103,27 @@ namespace MineSweepster
         /// Gets random bomb placements with random ints for 
         /// randX & randY
         /// </summary>
-        private void GetBombPlacement()
+        private void GetBombPlacement(int row, int col)
         {
             for (int i = 0; i < numberOfBombs; i++)
             {
                 randX = rand.Next(numberOfCells);
                 randY = rand.Next(numberOfCells);
 
-                while (Cells[randX, randY] == BOMB)
+                while (Cells[randX, randY] == BOMB && (randX == row && randY == col))
                 {
                     randX = rand.Next(numberOfCells);
                     randY = rand.Next(numberOfCells);
                 }
                 Cells[randX, randY] = BOMB;
             }
+
+            SetAdjacentToBombValues();
         }
 
+        /// <summary>
+        /// Find what the values of each cell touching bombs are
+        /// </summary>
         private void SetAdjacentToBombValues()
         {
             // For every cell
@@ -143,22 +154,50 @@ namespace MineSweepster
         }
 
         /// <summary>
-        /// Probably will be unused.
+        /// Reveals all of the grid cells that are true
+        /// except for the ones marked as 'flags'
         /// </summary>
         private void DrawGrid()
         {
-            int index = 0;
-
             // Set colors of each rectangle based on grid values
             for (int row = 0; row < numberOfCells; row++)
             {
                 for (int col = 0; col < numberOfCells; col++)
                 {
+                    int index = row * numberOfCells + col;
                     Rectangle rect = boardCanvas.Children[index] as Rectangle;
-                    index++;
 
+                    if (isBomb[row, col] && rect.Fill != Brushes.Blue)
+                    {                        
+                        rect.Fill = GetImageBrush(rect, row, col);
+                    }
                 }
             }
+        }
+
+        /// <summary>
+        /// Image handling of cells background
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="row"></param>
+        /// <param name="col"></param>
+        /// <returns></returns>
+        private ImageBrush GetImageBrush(Rectangle rect, int row, int col)
+        {
+            ImageBrush result = new ImageBrush();
+
+            if (Cells[row, col] == 1) result.ImageSource = new BitmapImage(new Uri("Images/1.png", UriKind.RelativeOrAbsolute));
+            else if (Cells[row, col] == 2) result.ImageSource = new BitmapImage(new Uri("Images/2.png", UriKind.RelativeOrAbsolute));
+            else if (Cells[row, col] == 3) result.ImageSource = new BitmapImage(new Uri("Images/3.png", UriKind.RelativeOrAbsolute));
+            else if (Cells[row, col] == 4) result.ImageSource = new BitmapImage(new Uri("Images/4.png", UriKind.RelativeOrAbsolute));
+            else if (Cells[row, col] == 5) result.ImageSource = new BitmapImage(new Uri("Images/5.png", UriKind.RelativeOrAbsolute));
+            else if (Cells[row, col] == 6) result.ImageSource = new BitmapImage(new Uri("Images/6.png", UriKind.RelativeOrAbsolute));
+            else if (Cells[row, col] == 7) result.ImageSource = new BitmapImage(new Uri("Images/7.png", UriKind.RelativeOrAbsolute));
+            else if (Cells[row, col] == 8) result.ImageSource = new BitmapImage(new Uri("Images/8.png", UriKind.RelativeOrAbsolute));
+            else if (Cells[row, col] == BOMB) result.ImageSource = new BitmapImage(new Uri("Images/bomb.png", UriKind.RelativeOrAbsolute));
+            else result.ImageSource = new BitmapImage(new Uri("Images/0.png", UriKind.RelativeOrAbsolute));
+
+            return result;
         }
 
         /// <summary>
@@ -191,11 +230,21 @@ namespace MineSweepster
             int col = (int)(mousePosition.X) / rectSize;
             Console.WriteLine("row: " + row + " col: " + col);
 
+            if(!isGameInSession)
+            {
+                GetBombPlacement(row, col);
+                isGameInSession = true;
+            }
+
             int index = row * numberOfCells + col;
             Rectangle rect = boardCanvas.Children[index] as Rectangle;
 
+            if(Cells[row, col] == 0)
+                FillOutZero(row, col);
+
             if (!isBomb[row, col])
             {
+<<<<<<< HEAD
                 if (Cells[row, col] == BOMB)
                 {
                     rect.Fill = new ImageBrush { 
@@ -207,11 +256,90 @@ namespace MineSweepster
                     rect.Fill = GetImageBrush(rect, row, col);
                 }
 
+=======
+>>>>>>> a1b76fd35c034df9fac576e30e0b0cfd6430d1be
                 isBomb[row, col] = true;
+            }
+
+            // find if game is over
+            if(IsGameOver())
+            {
+                mainWindow.Close();
             }
 
             ConsoleDrawGrid();
             DrawGrid();
+        }
+
+<<<<<<< HEAD
+=======
+        /// <summary>
+        /// If a bomb was left-clicked on the game is over and player loses
+        /// Else if there is no false cells in isBomb[,]
+        /// Else the game is not over
+        /// </summary>
+        /// <returns></returns>
+        private bool IsGameOver()
+        {
+            bool result = false;
+            int counter = 0;
+
+            for (int i = 0; i < numberOfCells; i++)
+            {
+                for (int j = 0; j < numberOfCells; j++)
+                {
+                    int index = i * numberOfCells + j;
+                    Rectangle rect = boardCanvas.Children[index] as Rectangle;
+
+                    if(isBomb[i, j])
+                    {
+                        counter++;
+                        if (counter == numberOfCells * numberOfCells)
+                            result = true;
+                    }
+
+                    if((Cells[i, j] == 9 && isBomb[i, j]) && rect.Fill != Brushes.Blue)
+                        result = true;
+                }
+            }
+
+            return result;
+        }
+
+>>>>>>> a1b76fd35c034df9fac576e30e0b0cfd6430d1be
+        /// <summary>
+        /// DFS of all cells with value of 0
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="col"></param>
+        private void FillOutZero(int row, int col)
+        {
+            // If the selected spot is a zero,
+            // starting from that cell do a DFS until we hit numbers
+
+            // Mark spot we are at
+            isBomb[row, col] = true;
+
+            // for all nodes adjacent to node: [row, col]
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    int NewRow = row + i;
+                    int NewCol = col + j;
+                    if ((NewRow >= 0 && NewCol >= 0 && NewRow < numberOfCells && NewCol < numberOfCells) && !isBomb[NewRow, NewCol])
+                    {
+                        if (Cells[NewRow, NewCol] == 0)
+                        {
+                            FillOutZero(NewRow, NewCol);
+                        }
+                        else
+                        {
+                            isBomb[NewRow, NewCol] = true;
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -261,7 +389,6 @@ namespace MineSweepster
             }
 
             ConsoleDrawGrid();
-            DrawGrid();
         }
 
         private ImageBrush GetImageBrush(Rectangle rect, int row, int col)
