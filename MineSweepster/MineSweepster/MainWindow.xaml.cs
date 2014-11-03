@@ -34,6 +34,9 @@ namespace MineSweepster
 
         int rectSize;
 
+        private bool isFlag = false;
+        private bool isUnsure = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -70,10 +73,10 @@ namespace MineSweepster
                     isBomb[row, col] = false;
 
                     Rectangle rect = new Rectangle();
-                    //rect.Fill = Brushes.Violet;
-                    rect.Fill = new ImageBrush { 
-                        ImageSource = new BitmapImage(new Uri("Images/0.png", UriKind.RelativeOrAbsolute))
-                    };
+                    rect.Fill = Brushes.Violet;
+                    //rect.Fill = new ImageBrush { 
+                    //    ImageSource = new BitmapImage(new Uri("Images/0.png", UriKind.RelativeOrAbsolute))
+                    //};
                     rect.Width = rectSize + 1;
                     rect.Height = rect.Width + 1;
                     rect.Stroke = Brushes.Black;
@@ -201,7 +204,6 @@ namespace MineSweepster
                 }
                 else
                 {
-
                     rect.Fill = GetImageBrush(rect, row, col);
                 }
 
@@ -210,23 +212,6 @@ namespace MineSweepster
 
             ConsoleDrawGrid();
             DrawGrid();
-        }
-
-        private ImageBrush GetImageBrush(Rectangle rect, int row, int col)
-        {
-            ImageBrush result = new ImageBrush();
-
-            if (Cells[row, col] == 1) result.ImageSource = new BitmapImage(new Uri("Images/1.png", UriKind.RelativeOrAbsolute));
-            if (Cells[row, col] == 2) result.ImageSource = new BitmapImage(new Uri("Images/2.png", UriKind.RelativeOrAbsolute));
-            if (Cells[row, col] == 3) result.ImageSource = new BitmapImage(new Uri("Images/3.png", UriKind.RelativeOrAbsolute));
-            if (Cells[row, col] == 4) result.ImageSource = new BitmapImage(new Uri("Images/4.png", UriKind.RelativeOrAbsolute));
-            if (Cells[row, col] == 5) result.ImageSource = new BitmapImage(new Uri("Images/5.png", UriKind.RelativeOrAbsolute));
-            if (Cells[row, col] == 6) result.ImageSource = new BitmapImage(new Uri("Images/6.png", UriKind.RelativeOrAbsolute));
-            if (Cells[row, col] == 7) result.ImageSource = new BitmapImage(new Uri("Images/7.png", UriKind.RelativeOrAbsolute));
-            if (Cells[row, col] == 8) result.ImageSource = new BitmapImage(new Uri("Images/8.png", UriKind.RelativeOrAbsolute));
-            if (Cells[row, col] == 9) result.ImageSource = new BitmapImage(new Uri("Images/9.png", UriKind.RelativeOrAbsolute));
-            
-            return result;
         }
 
         /// <summary>
@@ -248,27 +233,52 @@ namespace MineSweepster
             Rectangle rect = boardCanvas.Children[index] as Rectangle;
 
             // Does the unsure if bomb graphic
-            if (rect.Fill == Brushes.Blue)
+            if (isFlag)
             {
-                rect.Fill = Brushes.BlueViolet;
+                rect.Fill = new ImageBrush {
+                    ImageSource = new BitmapImage(new Uri("Images/unsure.png", UriKind.RelativeOrAbsolute))
+                };
+                isFlag = false;
+                isUnsure = true;
                 isBomb[row, col] = false;
             }
-            else if (rect.Fill == Brushes.BlueViolet)
+            else if (isUnsure)
             {
                 rect.Fill = Brushes.Violet;
+                isUnsure = false;
                 isBomb[row, col] = false;
             }
             else
             {
                 if (!isBomb[row, col])
                 {
-                    rect.Fill = Brushes.Blue;
+                    rect.Fill = new ImageBrush { 
+                        ImageSource = new BitmapImage(new Uri("Images/flag.png", UriKind.RelativeOrAbsolute))
+                    };
+                    isFlag = true;
                     isBomb[row, col] = true;
                 }
             }
 
             ConsoleDrawGrid();
             DrawGrid();
+        }
+
+        private ImageBrush GetImageBrush(Rectangle rect, int row, int col)
+        {
+            ImageBrush result = new ImageBrush();
+
+            if (Cells[row, col] == 1) result.ImageSource = new BitmapImage(new Uri("Images/1.png", UriKind.RelativeOrAbsolute));
+            if (Cells[row, col] == 2) result.ImageSource = new BitmapImage(new Uri("Images/2.png", UriKind.RelativeOrAbsolute));
+            if (Cells[row, col] == 3) result.ImageSource = new BitmapImage(new Uri("Images/3.png", UriKind.RelativeOrAbsolute));
+            if (Cells[row, col] == 4) result.ImageSource = new BitmapImage(new Uri("Images/4.png", UriKind.RelativeOrAbsolute));
+            if (Cells[row, col] == 5) result.ImageSource = new BitmapImage(new Uri("Images/5.png", UriKind.RelativeOrAbsolute));
+            if (Cells[row, col] == 6) result.ImageSource = new BitmapImage(new Uri("Images/6.png", UriKind.RelativeOrAbsolute));
+            if (Cells[row, col] == 7) result.ImageSource = new BitmapImage(new Uri("Images/7.png", UriKind.RelativeOrAbsolute));
+            if (Cells[row, col] == 8) result.ImageSource = new BitmapImage(new Uri("Images/8.png", UriKind.RelativeOrAbsolute));
+            if (Cells[row, col] == 9) result.ImageSource = new BitmapImage(new Uri("Images/9.png", UriKind.RelativeOrAbsolute));
+
+            return result;
         }
     }
 }
