@@ -1,7 +1,7 @@
-﻿<Window x:Class="MineSweepster.MainWindow"
+﻿<Window x:Name="mainWindow" x:Class="MineSweepster.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="275" Width="250" MinHeight="275" MinWidth="250">
+        Title="MainWindow" Height="575" Width="450" MinHeight="275" MinWidth="250">
     <Canvas x:Name="boardCanvas" Width="240" Height="270" 
             HorizontalAlignment="Left" VerticalAlignment="Top" 
             MouseLeftButtonUp="boardCanvas_MouseLeftButtonUp"
